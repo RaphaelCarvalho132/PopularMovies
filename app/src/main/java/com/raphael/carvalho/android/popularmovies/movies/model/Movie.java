@@ -37,4 +37,8 @@ public class Movie {
     public String getTitle() {
         return title;
     }
+
+    public String getPosterPath() {
+        return posterPath;
+    }
 }

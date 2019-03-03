@@ -5,11 +5,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import com.raphael.carvalho.android.popularmovies.R;
+import com.raphael.carvalho.android.popularmovies.movies.MoviesUrl;
 import com.raphael.carvalho.android.popularmovies.movies.adapter.MoviesAdapter.MovieViewHolder;
 import com.raphael.carvalho.android.popularmovies.movies.model.Movie;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,16 +50,19 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     }
 
     static class MovieViewHolder extends RecyclerView.ViewHolder {
-        private final TextView tvMovieTitle;
+        private final ImageView ivPoster;
 
         MovieViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            tvMovieTitle = itemView.findViewById(R.id.tv_movie_title);
+            ivPoster = itemView.findViewById(R.id.iv_movie_poster);
         }
 
         void bind(Movie movie) {
-            tvMovieTitle.setText(movie.getTitle());
+            Picasso.get()
+                    .load(MoviesUrl.buildPosterUri(movie.getPosterPath()).toString())
+                    .into(ivPoster);
+            ivPoster.setContentDescription(movie.getTitle());
         }
     }
 }

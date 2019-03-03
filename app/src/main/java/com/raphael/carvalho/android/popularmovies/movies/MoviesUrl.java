@@ -15,7 +15,7 @@ import static com.raphael.carvalho.android.popularmovies.BuildConfig.API_KEY_THE
 
 public class MoviesUrl {
     public static final String SORT_BY_POPULARITY = "popularity.desc";
-    public static final String SORT_BY_VOTE_AVERAGE = "vote_average.desc";
+    private static final String SORT_BY_VOTE_AVERAGE = "vote_average.desc";
 
     private static final String TAG = MoviesUrl.class.getSimpleName();
 
@@ -25,6 +25,16 @@ public class MoviesUrl {
     private static final String SORT_BY_PARAM = "sort_by";
     private static final String PAGE_PARAM = "page";
     private static final String LANGUAGE_PARAM = "language";
+
+    private static final String IMG_URL = "http://image.tmdb.org/t/p/";
+    private static final String IMG_QUALITY = "w185";
+
+    public static Uri buildPosterUri(String posterPath) {
+        return Uri.parse(IMG_URL).buildUpon()
+                .appendEncodedPath(IMG_QUALITY)
+                .appendEncodedPath(posterPath)
+                .build();
+    }
 
     public static URL buildUrl(@SortBy String sortBy, String page) {
         return buildUrl(
