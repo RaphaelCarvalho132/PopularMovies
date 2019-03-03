@@ -17,9 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder> {
+    private MoviesListener listener;
     private final List<Movie> movies;
 
-    public MoviesAdapter() {
+    public MoviesAdapter(@NonNull MoviesListener listener) {
+        this.listener = listener;
         movies = new ArrayList<>();
     }
 
@@ -34,6 +36,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder movieViewHolder, int i) {
+        if (i + 1 == getItemCount()) listener.onLoadLastItem();
         movieViewHolder.bind(movies.get(i));
     }
 
@@ -64,5 +67,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder> {
                     .into(ivPoster);
             ivPoster.setContentDescription(movie.getTitle());
         }
+    }
+
+    public interface MoviesListener {
+        void onLoadLastItem();
     }
 }

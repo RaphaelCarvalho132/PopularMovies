@@ -13,7 +13,7 @@ import com.raphael.carvalho.android.popularmovies.movies.model.MovieInfo;
 import com.raphael.carvalho.android.popularmovies.movies.task.SearchMoviesTask;
 import com.raphael.carvalho.android.popularmovies.util.TaskListener;
 
-public class MoviesActivity extends AppCompatActivity implements TaskListener<MovieInfo> {
+public class MoviesActivity extends AppCompatActivity implements TaskListener<MovieInfo>, MoviesAdapter.MoviesListener {
     private View pbLoading;
     private View cgErrorLoading;
 
@@ -30,7 +30,7 @@ public class MoviesActivity extends AppCompatActivity implements TaskListener<Mo
 
         sortBy = MoviesUrl.SORT_BY_POPULARITY;
         initViews();
-        new SearchMoviesTask(MoviesActivity.this).execute(sortBy, "1");
+        loadMovies();
     }
 
     private void initViews() {
@@ -41,15 +41,12 @@ public class MoviesActivity extends AppCompatActivity implements TaskListener<Mo
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String page = (movieInfo != null) ? movieInfo.getPage() : "1";
-
-                        new SearchMoviesTask(MoviesActivity.this)
-                                .execute(sortBy, page);
+                        loadMovies();
                     }
                 }
         );
 
-        adapter = new MoviesAdapter();
+        adapter = new MoviesAdapter(this);
         rvMovies = findViewById(R.id.rv_movies);
         rvMovies.setAdapter(adapter);
     }
@@ -79,5 +76,17 @@ public class MoviesActivity extends AppCompatActivity implements TaskListener<Mo
 
         movieInfo = result;
         adapter.addMovies(result.getMovies());
+    }
+
+    @Override
+    public void onLoadLastItem() {
+        loadMovies();
+    }
+
+    private void loadMovies() {
+        String page = (movieInfo != null) ? movieInfo.getPage() + 1 : "1";
+
+        new SearchMoviesTask(this)
+                .execute(sortBy, page);
     }
 }
