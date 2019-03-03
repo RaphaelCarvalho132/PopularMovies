@@ -84,7 +84,8 @@ public class MoviesActivity extends AppCompatActivity implements TaskListener<Mo
     }
 
     private void loadMovies() {
-        String page = (movieInfo != null) ? movieInfo.getPage() + 1 : "1";
+        String page = (movieInfo != null)
+                ? Integer.toString(movieInfo.getPage() + 1) : "1";
 
         new SearchMoviesTask(this)
                 .execute(sortBy, page);

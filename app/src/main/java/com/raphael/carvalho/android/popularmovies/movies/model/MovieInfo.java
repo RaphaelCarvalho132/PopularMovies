@@ -14,8 +14,8 @@ public class MovieInfo {
     @SerializedName("results")
     private ArrayList<Movie> movies;
 
-    public String getPage() {
-        return Integer.toString(page);
+    public Integer getPage() {
+        return page;
     }
 
     public ArrayList<Movie> getMovies() {
