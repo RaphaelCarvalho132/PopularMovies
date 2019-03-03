@@ -30,7 +30,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         return new MovieViewHolder(
                 LayoutInflater.from(viewGroup.getContext())
-                        .inflate(R.layout.item_movie, viewGroup, false)
+                        .inflate(R.layout.item_movie, viewGroup, false),
+                listener
         );
     }
 
@@ -52,24 +53,38 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder> {
         notifyItemRangeInserted(size, movies.size());
     }
 
-    static class MovieViewHolder extends RecyclerView.ViewHolder {
+    public interface MoviesListener {
+        void onClickMovie(Movie movie);
+
+        void onLoadLastItem();
+    }
+
+    static class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private final MoviesListener listener;
         private final ImageView ivPoster;
 
-        MovieViewHolder(@NonNull View itemView) {
-            super(itemView);
+        private Movie movie;
 
+        MovieViewHolder(@NonNull View itemView, MoviesListener listener) {
+            super(itemView);
+            itemView.setOnClickListener(this);
+
+            this.listener = listener;
             ivPoster = itemView.findViewById(R.id.iv_movie_poster);
         }
 
         void bind(Movie movie) {
+            this.movie = movie;
+
             Picasso.get()
                     .load(MoviesUrl.buildPosterUri(movie.getPosterPath()).toString())
                     .into(ivPoster);
             ivPoster.setContentDescription(movie.getTitle());
         }
-    }
 
-    public interface MoviesListener {
-        void onLoadLastItem();
+        @Override
+        public void onClick(View v) {
+            listener.onClickMovie(movie);
+        }
     }
 }

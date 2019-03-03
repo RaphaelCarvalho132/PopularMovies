@@ -1,5 +1,6 @@
 package com.raphael.carvalho.android.popularmovies.movies.activity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,8 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.raphael.carvalho.android.popularmovies.R;
+import com.raphael.carvalho.android.popularmovies.detail.activity.MovieDetailActivity;
 import com.raphael.carvalho.android.popularmovies.movies.MoviesUrl;
 import com.raphael.carvalho.android.popularmovies.movies.adapter.MoviesAdapter;
+import com.raphael.carvalho.android.popularmovies.movies.model.Movie;
 import com.raphael.carvalho.android.popularmovies.movies.model.MovieInfo;
 import com.raphael.carvalho.android.popularmovies.movies.task.SearchMoviesTask;
 import com.raphael.carvalho.android.popularmovies.util.TaskListener;
@@ -76,6 +79,14 @@ public class MoviesActivity extends AppCompatActivity implements TaskListener<Mo
 
         movieInfo = result;
         adapter.addMovies(result.getMovies());
+    }
+
+    @Override
+    public void onClickMovie(Movie movie) {
+        Intent intent = new Intent(this, MovieDetailActivity.class);
+        MovieDetailActivity.addExtras(intent, movie);
+
+        startActivity(intent);
     }
 
     @Override
