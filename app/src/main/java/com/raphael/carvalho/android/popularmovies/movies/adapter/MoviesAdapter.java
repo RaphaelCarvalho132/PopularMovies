@@ -53,6 +53,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder> {
         notifyItemRangeInserted(size, movies.size());
     }
 
+    public void clearMovies() {
+        this.movies.clear();
+        notifyDataSetChanged();
+    }
+
     public interface MoviesListener {
         void onClickMovie(Movie movie);
 

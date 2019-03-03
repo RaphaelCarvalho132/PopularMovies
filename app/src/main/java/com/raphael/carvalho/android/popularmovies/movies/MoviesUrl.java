@@ -15,7 +15,7 @@ import static com.raphael.carvalho.android.popularmovies.BuildConfig.API_KEY_THE
 
 public class MoviesUrl {
     public static final String SORT_BY_POPULARITY = "popularity.desc";
-    private static final String SORT_BY_VOTE_AVERAGE = "vote_average.desc";
+    public static final String SORT_BY_VOTE_AVERAGE = "vote_average.desc";
 
     private static final String TAG = MoviesUrl.class.getSimpleName();
 
