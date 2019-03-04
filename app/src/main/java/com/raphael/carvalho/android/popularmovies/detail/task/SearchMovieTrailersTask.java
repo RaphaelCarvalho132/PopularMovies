@@ -50,6 +50,6 @@ public class SearchMovieTrailersTask extends AsyncTask<String, Void, TrailerInfo
         if (trailerInfo != null) {
             listener.showResult(trailerInfo);
 
-        } else listener.showErrorMessage(this);
+        } else listener.showErrorMessage();
     }
 }

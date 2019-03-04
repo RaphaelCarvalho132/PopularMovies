@@ -24,6 +24,7 @@ public class MoviesUrl {
     private static final String DISCOVER_PATH_URL = "discover/movie";
     private static final String MOVIE_PATH_URL = "movie";
     private static final String TRAILER_PATH_URL = "videos";
+    private static final String REVIEWS_PATH_URL = "reviews";
 
     private static final String API_KEY_PARAM = "api_key";
     private static final String SORT_BY_PARAM = "sort_by";
@@ -56,6 +57,17 @@ public class MoviesUrl {
                         .appendEncodedPath(MOVIE_PATH_URL)
                         .appendEncodedPath(movieId)
                         .appendEncodedPath(TRAILER_PATH_URL)
+                        .build()
+        );
+    }
+
+    public static URL buildReviewsUrl(String movieId, String page) {
+        return buildUrl(
+                getConfiguredBuilder()
+                        .appendEncodedPath(MOVIE_PATH_URL)
+                        .appendEncodedPath(movieId)
+                        .appendEncodedPath(REVIEWS_PATH_URL)
+                        .appendQueryParameter(PAGE_PARAM, page)
                         .build()
         );
     }

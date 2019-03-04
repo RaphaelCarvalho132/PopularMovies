@@ -1,7 +1,6 @@
 package com.raphael.carvalho.android.popularmovies.movies.activity;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -97,7 +96,7 @@ public class MoviesActivity extends AppCompatActivity implements TaskListener<Mo
     }
 
     @Override
-    public void showErrorMessage(AsyncTask task) {
+    public void showErrorMessage() {
         pbLoading.setVisibility(View.GONE);
         rvMovies.setVisibility(View.GONE);
 

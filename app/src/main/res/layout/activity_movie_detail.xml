@@ -143,7 +143,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_movie_detail_error_loading_trailers" />
 
         <android.support.constraint.Group
-            android:id="@+id/cg_movie_detail_error_loading"
+            android:id="@+id/cg_movie_detail_error_loading_trailers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
@@ -190,14 +190,65 @@
             app:layout_constraintStart_toStartOf="@+id/iv_movie_detail_poster"
             app:layout_constraintTop_toBottomOf="@+id/v_movie_detail_separator_line_reviews" />
 
+        <ProgressBar
+            android:id="@+id/pb_movie_detail_loading_reviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/tv_movie_detail_title"
+            app:layout_constraintStart_toStartOf="@+id/iv_movie_detail_poster"
+            app:layout_constraintTop_toBottomOf="@+id/tv_movie_detail_reviews_label" />
+
+        <TextView
+            android:id="@+id/tv_movie_detail_error_loading_reviews"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:gravity="center"
+            android:text="@string/message_error_loading_information"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/bt_movie_detail_error_loading_reviews"
+            app:layout_constraintEnd_toEndOf="@+id/tv_movie_detail_title"
+            app:layout_constraintStart_toStartOf="@+id/iv_movie_detail_poster"
+            app:layout_constraintTop_toBottomOf="@+id/tv_movie_detail_reviews_label"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <Button
+            android:id="@+id/bt_movie_detail_error_loading_reviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/action_try_again"
+            android:visibility="gone"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/tv_movie_detail_title"
+            app:layout_constraintStart_toStartOf="@+id/iv_movie_detail_poster"
+            app:layout_constraintTop_toBottomOf="@+id/tv_movie_detail_error_loading_reviews" />
+
+        <android.support.constraint.Group
+            android:id="@+id/cg_movie_detail_error_loading_reviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:constraint_referenced_ids="tv_movie_detail_error_loading_reviews,bt_movie_detail_error_loading_reviews"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="16dp" />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_movie_detail_reviews"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="@+id/tv_movie_detail_title"
             app:layout_constraintStart_toStartOf="@+id/iv_movie_detail_poster"
-            app:layout_constraintTop_toBottomOf="@+id/tv_movie_detail_reviews_label" />
-
+            app:layout_constraintTop_toBottomOf="@+id/tv_movie_detail_reviews_label"
+            tools:itemCount="3"
+            tools:listitem="@layout/item_review" />
     </android.support.constraint.ConstraintLayout>
 </android.support.v4.widget.NestedScrollView>

@@ -1,20 +1,20 @@
-package com.raphael.carvalho.android.popularmovies.movies.task;
+package com.raphael.carvalho.android.popularmovies.detail.task;
 
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
-import com.raphael.carvalho.android.popularmovies.movies.model.MovieInfo;
+import com.raphael.carvalho.android.popularmovies.detail.model.ReviewInfo;
 import com.raphael.carvalho.android.popularmovies.util.MoviesUrl;
 import com.raphael.carvalho.android.popularmovies.util.NetworkUtils;
 import com.raphael.carvalho.android.popularmovies.util.TaskListener;
 
 import java.net.URL;
 
-public class SearchMoviesTask extends AsyncTask<String, Void, MovieInfo> {
-    private final TaskListener<MovieInfo> listener;
+public class SearchMovieReviewsTask extends AsyncTask<String, Void, ReviewInfo> {
+    private final TaskListener<ReviewInfo> listener;
 
-    public SearchMoviesTask(@NonNull TaskListener<MovieInfo> listener) {
+    public SearchMovieReviewsTask(@NonNull TaskListener<ReviewInfo> listener) {
         this.listener = listener;
     }
 
@@ -25,17 +25,17 @@ public class SearchMoviesTask extends AsyncTask<String, Void, MovieInfo> {
     }
 
     @Override
-    protected MovieInfo doInBackground(String... params) {
+    protected ReviewInfo doInBackground(String... params) {
         URL url = null;
         if (params.length >= 2) {
-            url = MoviesUrl.buildDiscoverUrl(params[0], params[1]);
+            url = MoviesUrl.buildReviewsUrl(params[0], params[1]);
         }
 
         if (url == null) return null;
         try {
             String json = NetworkUtils.getResponseFromHttpUrl(url);
 
-            return new Gson().fromJson(json, MovieInfo.class);
+            return new Gson().fromJson(json, ReviewInfo.class);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -44,11 +44,11 @@ public class SearchMoviesTask extends AsyncTask<String, Void, MovieInfo> {
     }
 
     @Override
-    protected void onPostExecute(MovieInfo movieInfo) {
-        super.onPostExecute(movieInfo);
+    protected void onPostExecute(ReviewInfo reviewInfo) {
+        super.onPostExecute(reviewInfo);
 
-        if (movieInfo != null) {
-            listener.showResult(movieInfo);
+        if (reviewInfo != null) {
+            listener.showResult(reviewInfo);
 
         } else listener.showErrorMessage();
     }
