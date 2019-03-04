@@ -3,8 +3,10 @@ package com.raphael.carvalho.android.popularmovies.detail.activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -39,8 +41,7 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailerAda
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
 
-        Intent intent = getIntent();
-        movie = intent.getParcelableExtra(EXTRA_MOVIE);
+        movie = getIntent().getParcelableExtra(EXTRA_MOVIE);
         if (movie != null) {
             initViews(movie);
 
@@ -95,6 +96,23 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailerAda
 
     private void loadTrailers() {
         new SearchMovieTrailersTask(this).execute(movie.getId() + "");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent parentIntent = NavUtils.getParentActivityIntent(this);
+                if (parentIntent != null) {
+                    parentIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    NavUtils.navigateUpTo(this, parentIntent);
+
+                    return true;
+                }
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
