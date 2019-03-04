@@ -5,10 +5,8 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 import com.raphael.carvalho.android.popularmovies.util.DateUtil;
-import com.raphael.carvalho.android.popularmovies.util.FormatUtil;
 
 import java.text.ParseException;
-import java.util.IllegalFormatException;
 import java.util.List;
 
 import static com.raphael.carvalho.android.popularmovies.util.DateUtil.DAY;
@@ -136,14 +134,8 @@ public class Movie implements Parcelable {
         return 0;
     }
 
-    public String getVoteAverage() {
-        try {
-            return FormatUtil.format(voteAverage);
-
-        } catch (IllegalFormatException e) {
-            e.printStackTrace();
-            return "";
-        }
+    public Float getVoteAverage() {
+        return voteAverage;
     }
 
     public String getTitle() {

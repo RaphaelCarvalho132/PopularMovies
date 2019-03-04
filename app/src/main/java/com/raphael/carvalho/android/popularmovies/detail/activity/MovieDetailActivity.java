@@ -51,6 +51,9 @@ public class MovieDetailActivity extends AppCompatActivity {
         tvReleaseDate.setText(movie.getReleaseDate());
 
         TextView tvRating = findViewById(R.id.tv_movie_detail_rating);
-        tvRating.setText(movie.getVoteAverage());
+        tvRating.setText(getString(
+                R.string.movie_detail_rating_arg,
+                movie.getVoteAverage()
+        ));
     }
 }
