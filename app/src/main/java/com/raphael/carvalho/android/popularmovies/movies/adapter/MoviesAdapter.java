@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.raphael.carvalho.android.popularmovies.R;
-import com.raphael.carvalho.android.popularmovies.movies.MoviesUrl;
 import com.raphael.carvalho.android.popularmovies.movies.adapter.MoviesAdapter.MovieViewHolder;
 import com.raphael.carvalho.android.popularmovies.movies.model.Movie;
+import com.raphael.carvalho.android.popularmovies.util.MoviesUrl;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

@@ -12,11 +12,11 @@ import android.view.View;
 
 import com.raphael.carvalho.android.popularmovies.R;
 import com.raphael.carvalho.android.popularmovies.detail.activity.MovieDetailActivity;
-import com.raphael.carvalho.android.popularmovies.movies.MoviesUrl;
 import com.raphael.carvalho.android.popularmovies.movies.adapter.MoviesAdapter;
 import com.raphael.carvalho.android.popularmovies.movies.model.Movie;
 import com.raphael.carvalho.android.popularmovies.movies.model.MovieInfo;
 import com.raphael.carvalho.android.popularmovies.movies.task.SearchMoviesTask;
+import com.raphael.carvalho.android.popularmovies.util.MoviesUrl;
 import com.raphael.carvalho.android.popularmovies.util.TaskListener;
 
 public class MoviesActivity extends AppCompatActivity implements TaskListener<MovieInfo>, MoviesAdapter.MoviesListener {

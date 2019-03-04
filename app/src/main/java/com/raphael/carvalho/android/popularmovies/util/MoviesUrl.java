@@ -1,4 +1,4 @@
-package com.raphael.carvalho.android.popularmovies.movies;
+package com.raphael.carvalho.android.popularmovies.util;
 
 import android.net.Uri;
 import android.support.annotation.StringDef;
@@ -19,7 +19,11 @@ public class MoviesUrl {
 
     private static final String TAG = MoviesUrl.class.getSimpleName();
 
-    private static final String BASE_URL = "https://api.themoviedb.org/3/discover/movie";
+    private static final String BASE_URL = "https://api.themoviedb.org/3/";
+
+    private static final String DISCOVER_PATH_URL = "discover/movie";
+    private static final String MOVIE_PATH_URL = "movie";
+    private static final String TRAILER_PATH_URL = "videos";
 
     private static final String API_KEY_PARAM = "api_key";
     private static final String SORT_BY_PARAM = "sort_by";
@@ -36,11 +40,22 @@ public class MoviesUrl {
                 .build();
     }
 
-    public static URL buildUrl(@SortBy String sortBy, String page) {
+    public static URL buildDiscoverUrl(@SortBy String sortBy, String page) {
         return buildUrl(
                 getConfiguredBuilder()
+                        .appendEncodedPath(DISCOVER_PATH_URL)
                         .appendQueryParameter(SORT_BY_PARAM, sortBy)
                         .appendQueryParameter(PAGE_PARAM, page)
+                        .build()
+        );
+    }
+
+    public static URL buildTrailersUrl(String movieId) {
+        return buildUrl(
+                getConfiguredBuilder()
+                        .appendEncodedPath(MOVIE_PATH_URL)
+                        .appendEncodedPath(movieId)
+                        .appendEncodedPath(TRAILER_PATH_URL)
                         .build()
         );
     }
