@@ -13,7 +13,6 @@ import java.util.List;
 
 import static com.raphael.carvalho.android.popularmovies.util.DateUtil.DAY;
 import static com.raphael.carvalho.android.popularmovies.util.DateUtil.MOUNTH;
-import static com.raphael.carvalho.android.popularmovies.util.DateUtil.OUTPUT_FORMAT;
 import static com.raphael.carvalho.android.popularmovies.util.DateUtil.YEAR;
 
 public class Movie implements Parcelable {
@@ -30,6 +29,7 @@ public class Movie implements Parcelable {
     };
 
     private static final String INPUT_FORMAT = YEAR + "-" + MOUNTH + "-" + DAY;
+    private static final String OUTPUT_FORMAT = YEAR;
 
     @SerializedName("vote_count")
     private Integer voteCount;

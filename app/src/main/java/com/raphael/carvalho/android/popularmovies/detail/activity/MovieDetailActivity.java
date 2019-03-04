@@ -47,10 +47,10 @@ public class MovieDetailActivity extends AppCompatActivity {
         TextView tvSynopsis = findViewById(R.id.tv_movie_detail_synopsis);
         tvSynopsis.setText(movie.getOverview());
 
-        TextView tvRating = findViewById(R.id.tv_movie_detail_rating);
-        tvRating.setText(movie.getVoteAverage());
-
         TextView tvReleaseDate = findViewById(R.id.tv_movie_detail_release_date);
         tvReleaseDate.setText(movie.getReleaseDate());
+
+        TextView tvRating = findViewById(R.id.tv_movie_detail_rating);
+        tvRating.setText(movie.getVoteAverage());
     }
 }

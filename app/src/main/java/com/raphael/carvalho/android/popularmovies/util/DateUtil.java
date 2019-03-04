@@ -10,8 +10,6 @@ public class DateUtil {
     public static final String MOUNTH = "MM";
     public static final String YEAR = "yyyy";
 
-    public static final String OUTPUT_FORMAT = DAY + "/" + MOUNTH + "/" + YEAR;
-
     private DateUtil() {
     }
 
