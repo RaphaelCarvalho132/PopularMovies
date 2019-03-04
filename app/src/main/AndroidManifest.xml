@@ -22,10 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".detail.activity.MovieDetailActivity"
-            android:parentActivityName=".movies.activity.MoviesActivity"
-            tools:targetApi="jelly_bean" />
+        <activity android:name=".detail.activity.MovieDetailActivity" />
     </application>
 
 </manifest>
