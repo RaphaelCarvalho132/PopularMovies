@@ -41,6 +41,15 @@ public class MoviesUrl {
                 .build();
     }
 
+    public static URL buildMovieDetailUrl(String movieId) {
+        return buildUrl(
+                getConfiguredBuilder()
+                        .appendEncodedPath(MOVIE_PATH_URL)
+                        .appendEncodedPath(movieId)
+                        .build()
+        );
+    }
+
     public static URL buildDiscoverUrl(@SortBy String sortBy, String page) {
         return buildUrl(
                 getConfiguredBuilder()

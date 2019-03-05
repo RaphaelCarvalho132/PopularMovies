@@ -11,31 +11,40 @@ import android.view.View;
 
 import com.raphael.carvalho.android.popularmovies.R;
 import com.raphael.carvalho.android.popularmovies.detail.activity.MovieDetailActivity;
+import com.raphael.carvalho.android.popularmovies.favorite.dao.FavoriteDAO;
+import com.raphael.carvalho.android.popularmovies.favorite.dao.IFavoriteDAO;
 import com.raphael.carvalho.android.popularmovies.movies.adapter.MoviesAdapter;
 import com.raphael.carvalho.android.popularmovies.movies.model.Movie;
 import com.raphael.carvalho.android.popularmovies.movies.model.MovieInfo;
+import com.raphael.carvalho.android.popularmovies.movies.task.MovieDetailTask;
 import com.raphael.carvalho.android.popularmovies.movies.task.SearchMoviesTask;
 import com.raphael.carvalho.android.popularmovies.util.MoviesUrl;
 import com.raphael.carvalho.android.popularmovies.util.TaskListener;
 
-public class MoviesActivity extends AppCompatActivity implements TaskListener<MovieInfo>, MoviesAdapter.MoviesListener {
-    private View pbLoading;
-    private View cgErrorLoading;
+import java.util.ArrayList;
+import java.util.Set;
+
+public class MoviesActivity extends AppCompatActivity implements MoviesAdapter.MoviesListener {
+    private IFavoriteDAO favoriteDAO;
 
     private MoviesAdapter adapter;
-    private RecyclerView rvMovies;
+
+    private TaskListener<MovieInfo> movieInfoListener;
+    private TaskListener<ArrayList<Movie>> favoriteMoviesListener;
 
     private String sortBy;
-    private MovieInfo movieInfo;
+    private int page;
+
+    private boolean showFavorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies);
 
-        sortBy = MoviesUrl.SORT_BY_POPULARITY;
+        favoriteDAO = new FavoriteDAO();
         initViews();
-        loadMovies();
+        sortBy(MoviesUrl.SORT_BY_POPULARITY);
     }
 
     @Override
@@ -55,63 +64,118 @@ public class MoviesActivity extends AppCompatActivity implements TaskListener<Mo
         } else if (id == R.id.sort_by_top_rated) {
             sortBy(MoviesUrl.SORT_BY_VOTE_AVERAGE);
             return true;
+
+        } else if (id == R.id.sort_by_favorite) {
+            this.sortBy = null;
+            showFavorite = true;
+            adapter.clearMovies();
+            loadFavoriteMovies();
+
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     private void sortBy(@NonNull String sortBy) {
+        showFavorite = false;
         if (sortBy.equals(this.sortBy)) return;
 
         this.sortBy = sortBy;
-        movieInfo = null;
+        page = 1;
         adapter.clearMovies();
         loadMovies();
     }
 
     private void initViews() {
-        pbLoading = findViewById(R.id.pb_loading);
+        View pbLoading = findViewById(R.id.pb_loading);
 
-        cgErrorLoading = findViewById(R.id.cg_error_loading);
+        View cgErrorLoading = findViewById(R.id.cg_error_loading);
         findViewById(R.id.bt_error_loading).setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        loadMovies();
+                        if (showFavorite) {
+                            loadFavoriteMovies();
+
+                        } else loadMovies();
                     }
                 }
         );
 
         adapter = new MoviesAdapter(this);
-        rvMovies = findViewById(R.id.rv_movies);
+        RecyclerView rvMovies = findViewById(R.id.rv_movies);
         rvMovies.setAdapter(adapter);
+
+        movieInfoListener = initMovieInfoListener(adapter, rvMovies, pbLoading, cgErrorLoading);
+        favoriteMoviesListener = initFavoriteMoviesListener(adapter, rvMovies, pbLoading, cgErrorLoading);
     }
 
-    @Override
-    public void showLoading() {
-        cgErrorLoading.setVisibility(View.GONE);
-        rvMovies.setVisibility(View.GONE);
+    private TaskListener<MovieInfo> initMovieInfoListener(
+            final MoviesAdapter adapter, final RecyclerView recyclerView,
+            final View pbLoading, final View vErrorLoading) {
+        return new TaskListener<MovieInfo>() {
 
-        pbLoading.setVisibility(View.VISIBLE);
+            @Override
+            public void showLoading() {
+                vErrorLoading.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.GONE);
+
+                pbLoading.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void showErrorMessage() {
+                pbLoading.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.GONE);
+
+                vErrorLoading.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public synchronized void showResult(MovieInfo result) {
+                pbLoading.setVisibility(View.GONE);
+                vErrorLoading.setVisibility(View.GONE);
+
+                recyclerView.setVisibility(View.VISIBLE);
+
+                page = result.getPage();
+                adapter.addMovies(result.getMovies());
+            }
+        };
     }
 
-    @Override
-    public void showErrorMessage() {
-        pbLoading.setVisibility(View.GONE);
-        rvMovies.setVisibility(View.GONE);
+    private TaskListener<ArrayList<Movie>> initFavoriteMoviesListener(
+            final MoviesAdapter adapter, final RecyclerView recyclerView,
+            final View pbLoading, final View vErrorLoading) {
+        return new TaskListener<ArrayList<Movie>>() {
 
-        cgErrorLoading.setVisibility(View.VISIBLE);
-    }
+            @Override
+            public void showLoading() {
+                vErrorLoading.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.GONE);
 
-    @Override
-    public synchronized void showResult(MovieInfo result) {
-        pbLoading.setVisibility(View.GONE);
-        cgErrorLoading.setVisibility(View.GONE);
+                pbLoading.setVisibility(View.VISIBLE);
+            }
 
-        rvMovies.setVisibility(View.VISIBLE);
+            @Override
+            public void showErrorMessage() {
+                pbLoading.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.GONE);
 
-        movieInfo = result;
-        adapter.addMovies(result.getMovies());
+                vErrorLoading.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public synchronized void showResult(ArrayList<Movie> result) {
+                pbLoading.setVisibility(View.GONE);
+                vErrorLoading.setVisibility(View.GONE);
+
+                recyclerView.setVisibility(View.VISIBLE);
+
+                adapter.addMovies(result);
+            }
+        };
     }
 
     @Override
@@ -124,14 +188,20 @@ public class MoviesActivity extends AppCompatActivity implements TaskListener<Mo
 
     @Override
     public void onLoadLastItem() {
-        loadMovies();
+        if (!showFavorite) {
+            ++page;
+            loadMovies();
+        }
+    }
+
+    private void loadFavoriteMovies() {
+        Set<String> allMovieFavorite = favoriteDAO.loadAllMovieFavorite(this);
+        new MovieDetailTask(favoriteMoviesListener)
+                .execute(allMovieFavorite.toArray(new String[0]));
     }
 
     private void loadMovies() {
-        String page = (movieInfo != null)
-                ? Integer.toString(movieInfo.getPage() + 1) : "1";
-
-        new SearchMoviesTask(this)
-                .execute(sortBy, page);
+        new SearchMoviesTask(movieInfoListener)
+                .execute(sortBy, page + "");
     }
 }
