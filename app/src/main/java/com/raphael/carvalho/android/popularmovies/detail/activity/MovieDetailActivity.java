@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,14 +21,19 @@ import com.raphael.carvalho.android.popularmovies.detail.model.Trailer;
 import com.raphael.carvalho.android.popularmovies.detail.model.TrailerInfo;
 import com.raphael.carvalho.android.popularmovies.detail.task.SearchMovieReviewsTask;
 import com.raphael.carvalho.android.popularmovies.detail.task.SearchMovieTrailersTask;
+import com.raphael.carvalho.android.popularmovies.favorite.dao.FavoriteDAO;
+import com.raphael.carvalho.android.popularmovies.favorite.dao.IFavoriteDAO;
 import com.raphael.carvalho.android.popularmovies.movies.model.Movie;
 import com.raphael.carvalho.android.popularmovies.util.MoviesUrl;
 import com.raphael.carvalho.android.popularmovies.util.TaskListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.Set;
+
 public class MovieDetailActivity extends AppCompatActivity implements TrailerAdapter.TrailerListener, ReviewsAdapter.ReviewListener {
     private static final String EXTRA_MOVIE = "movie";
 
+    private IFavoriteDAO favoriteDAO;
     private Movie movie;
     private int reviewPage;
 
@@ -44,9 +50,14 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailerAda
         setContentView(R.layout.activity_movie_detail);
 
         movie = getIntent().getParcelableExtra(EXTRA_MOVIE);
-        reviewPage = 1;
         if (movie != null) {
+            reviewPage = 1;
+            favoriteDAO = new FavoriteDAO();
+
             initViews(movie);
+
+            loadTrailers();
+            loadReviews(reviewPage);
 
         } else {
             Toast.makeText(this, R.string.movie_detail_error_open, Toast.LENGTH_LONG).show();
@@ -60,6 +71,13 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailerAda
                 .load(MoviesUrl.buildPosterUri(movie.getPosterPath()).toString())
                 .into(ivPoster);
 
+        initMovieInfos();
+        initFavoriteAction();
+        initViewTrailers();
+        initViewReviews();
+    }
+
+    private void initMovieInfos() {
         TextView tvTitle = findViewById(R.id.tv_movie_detail_title);
         tvTitle.setText(movie.getTitle());
 
@@ -74,9 +92,34 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailerAda
                 R.string.movie_detail_rating_arg,
                 movie.getVoteAverage()
         ));
+    }
 
-        initViewTrailers();
-        initViewReviews();
+    private void initFavoriteAction() {
+        Set<String> allMovieFavorite = favoriteDAO.loadAllMovieFavorite(this);
+        final boolean favorite = allMovieFavorite.contains(movie.getId() + "");
+
+        final Button btMarkFavorite = findViewById(R.id.bt_movie_detail_mark_favorite);
+        btMarkFavorite.setText(favorite ? R.string.movie_detail_favorite : R.string.movie_detail_mark_as_favorite);
+        btMarkFavorite.setSelected(favorite);
+        btMarkFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeFavoriteState(btMarkFavorite);
+            }
+        });
+    }
+
+    private void changeFavoriteState(Button btMarkFavorite) {
+        if (btMarkFavorite.isSelected()) {
+            btMarkFavorite.setText(R.string.movie_detail_mark_as_favorite);
+            favoriteDAO.deleteMovieFavorite(this, movie.getId() + "");
+
+        } else {
+            btMarkFavorite.setText(R.string.movie_detail_favorite);
+            favoriteDAO.saveMovieFavorite(this, movie.getId() + "");
+        }
+
+        btMarkFavorite.setSelected(!btMarkFavorite.isSelected());
     }
 
     private void initViewTrailers() {
@@ -97,7 +140,6 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailerAda
 
         trailerListener = initTrailerListener(
                 adapterTrailer, rvTrailers, pbLoadingTrailers, cgErrorLoadingTrailers);
-        loadTrailers();
     }
 
     private TaskListener<TrailerInfo> initTrailerListener(
@@ -153,7 +195,6 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailerAda
 
         reviewsListener = initReviewListener(
                 adapterReviews, rvReviews, pbLoadingReviews, cgErrorLoadingReviews);
-        loadReviews(reviewPage);
     }
 
     private TaskListener<ReviewInfo> initReviewListener(
