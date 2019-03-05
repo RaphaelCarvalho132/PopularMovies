@@ -23,21 +23,21 @@ public class Trailer implements Parcelable {
     private static final String SITE_YOU_TUBE = "YouTube";
 
     @SerializedName("id")
-    private String id;
+    private final String id;
     @SerializedName("iso_639_1")
-    private String iso6391;
+    private final String iso6391;
     @SerializedName("iso_3166_1")
-    private String iso31661;
+    private final String iso31661;
     @SerializedName("key")
-    private String key;
+    private final String key;
     @SerializedName("name")
-    private String name;
+    private final String name;
     @SerializedName("site")
-    private String site;
+    private final String site;
     @SerializedName("size")
-    private Integer size;
+    private final Integer size;
     @SerializedName("type")
-    private String type;
+    private final String type;
 
     private Trailer(Parcel in) {
         id = in.readString();

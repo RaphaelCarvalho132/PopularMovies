@@ -7,7 +7,7 @@ import java.util.Locale;
 
 public class DateUtil {
     public static final String DAY = "dd";
-    public static final String MOUNTH = "MM";
+    public static final String MONTH = "MM";
     public static final String YEAR = "yyyy";
 
     private DateUtil() {

@@ -10,7 +10,7 @@ import java.text.ParseException;
 import java.util.List;
 
 import static com.raphael.carvalho.android.popularmovies.util.DateUtil.DAY;
-import static com.raphael.carvalho.android.popularmovies.util.DateUtil.MOUNTH;
+import static com.raphael.carvalho.android.popularmovies.util.DateUtil.MONTH;
 import static com.raphael.carvalho.android.popularmovies.util.DateUtil.YEAR;
 
 public class Movie implements Parcelable {
@@ -26,37 +26,37 @@ public class Movie implements Parcelable {
         }
     };
 
-    private static final String INPUT_FORMAT = YEAR + "-" + MOUNTH + "-" + DAY;
+    private static final String INPUT_FORMAT = YEAR + "-" + MONTH + "-" + DAY;
     private static final String OUTPUT_FORMAT = YEAR;
 
     @SerializedName("vote_count")
-    private Integer voteCount;
+    private final Integer voteCount;
     @SerializedName("id")
-    private Integer id;
+    private final Integer id;
     @SerializedName("video")
-    private Boolean video;
+    private final Boolean video;
     @SerializedName("vote_average")
-    private Float voteAverage;
+    private final Float voteAverage;
     @SerializedName("title")
-    private String title;
+    private final String title;
     @SerializedName("popularity")
-    private Float popularity;
+    private final Float popularity;
     @SerializedName("poster_path")
-    private String posterPath;
+    private final String posterPath;
     @SerializedName("original_language")
-    private String originalLanguage;
+    private final String originalLanguage;
     @SerializedName("original_title")
-    private String originalTitle;
+    private final String originalTitle;
     @SerializedName("genre_ids")
     private List<Integer> genreIds = null;
     @SerializedName("backdrop_path")
-    private String backdropPath;
+    private final String backdropPath;
     @SerializedName("adult")
-    private Boolean adult;
+    private final Boolean adult;
     @SerializedName("overview")
-    private String overview;
+    private final String overview;
     @SerializedName("release_date")
-    private String releaseDate;
+    private final String releaseDate;
 
     private Movie(Parcel in) {
         if (in.readByte() == 0) {

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class TrailerAdapter extends RecyclerView.Adapter<TrailerViewHolder> {
     private final ArrayList<Trailer> trailers;
-    private TrailerListener listener;
+    private final TrailerListener listener;
 
     public TrailerAdapter(@NonNull TrailerListener listener) {
         this.listener = listener;

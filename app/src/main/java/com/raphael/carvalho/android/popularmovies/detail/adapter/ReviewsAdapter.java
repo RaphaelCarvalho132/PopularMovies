@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewViewHolder> {
     private final ArrayList<Review> reviews;
-    private ReviewListener listener;
+    private final ReviewListener listener;
 
     public ReviewsAdapter(@NonNull ReviewListener listener) {
         this.listener = listener;

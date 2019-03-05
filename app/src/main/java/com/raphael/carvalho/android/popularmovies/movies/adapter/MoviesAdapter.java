@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder> {
-    private MoviesListener listener;
+    private final MoviesListener listener;
     private final List<Movie> movies;
 
     public MoviesAdapter(@NonNull MoviesListener listener) {

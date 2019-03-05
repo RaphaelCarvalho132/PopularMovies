@@ -8,7 +8,6 @@
     <string name="movie_movie_title">Movie Title</string>
     <string name="movie_detail_error_open">You should not be seeing this.\n Error, try again later</string>
     <string name="movie_detail_rating_arg">%1$.1f/10</string>
-    <string name="movie_detail_release_date">Release Date:</string>
     <string name="movie_detail_mark_as_favorite">mark as favorite</string>
     <string name="movie_detail_favorite">favorite</string>
     <string name="movie_detail_trailers">Trailers:</string>

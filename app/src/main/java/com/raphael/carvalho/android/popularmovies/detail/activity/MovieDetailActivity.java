@@ -106,13 +106,13 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailerAda
                 .load(MoviesUrl.buildPosterUri(movie.getPosterPath()).toString())
                 .into(ivPoster);
 
-        initMovieInfos();
+        initMovieInformation();
         initFavoriteAction();
         initViewTrailers();
         initViewReviews();
     }
 
-    private void initMovieInfos() {
+    private void initMovieInformation() {
         TextView tvTitle = findViewById(R.id.tv_movie_detail_title);
         tvTitle.setText(movie.getTitle());
 
