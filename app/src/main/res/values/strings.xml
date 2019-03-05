@@ -12,4 +12,6 @@
     <string name="movie_detail_favorite">favorite</string>
     <string name="movie_detail_trailers">Trailers:</string>
     <string name="movie_detail_reviews">Reviews:</string>
+    <string name="movie_detail_error_sharing">Error sharing. Link not found</string>
+    <string name="movie_detail_error_no_app_share">Not found app to share</string>
 </resources>

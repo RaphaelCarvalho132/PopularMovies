@@ -1,8 +1,13 @@
 package com.raphael.carvalho.android.popularmovies.detail.model;
 
+import android.net.Uri;
+
 import com.google.gson.annotations.SerializedName;
+import com.raphael.carvalho.android.popularmovies.util.SitesUrl;
 
 public class Trailer {
+    private static final String SITE_YOU_TUBE = "YouTube";
+
     @SerializedName("id")
     private String id;
     @SerializedName("iso_639_1")
@@ -20,19 +25,14 @@ public class Trailer {
     @SerializedName("type")
     private String type;
 
-    public String getKey() {
-        return key;
-    }
-
     public String getName() {
         return name;
     }
 
-    public String getSite() {
-        return site;
-    }
+    public Uri getUri() {
+        if (SITE_YOU_TUBE.equals(site)) {
+            return SitesUrl.buildYouTubeUri(key);
 
-    public String getType() {
-        return type;
+        } else return null;
     }
 }

@@ -1,6 +1,7 @@
 package com.raphael.carvalho.android.popularmovies.detail.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -209,7 +210,18 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailerAda
 
     @Override
     public void onClickTrailer(Trailer trailer) {
-        //TODO
+        Uri uri = trailer.getUri();
+
+        if (uri != null) {
+            Intent shareIntent = new Intent(Intent.ACTION_VIEW);
+            shareIntent.setData(uri);
+
+            if (shareIntent.resolveActivity(getPackageManager()) != null) {
+                startActivity(shareIntent);
+            } else
+                Toast.makeText(this, R.string.movie_detail_error_no_app_share, Toast.LENGTH_LONG).show();
+
+        } else Toast.makeText(this, R.string.movie_detail_error_sharing, Toast.LENGTH_LONG).show();
     }
 
     @Override
