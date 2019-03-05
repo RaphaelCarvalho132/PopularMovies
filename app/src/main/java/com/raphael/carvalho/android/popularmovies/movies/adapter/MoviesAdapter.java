@@ -58,6 +58,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder> {
         notifyDataSetChanged();
     }
 
+    public List<Movie> getMovies() {
+        return movies;
+    }
+
     public interface MoviesListener {
         void onClickMovie(Movie movie);
 

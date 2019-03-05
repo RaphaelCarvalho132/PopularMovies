@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.raphael.carvalho.android.popularmovies.R;
 import com.raphael.carvalho.android.popularmovies.detail.adapter.ReviewsAdapter;
 import com.raphael.carvalho.android.popularmovies.detail.adapter.TrailerAdapter;
+import com.raphael.carvalho.android.popularmovies.detail.model.Review;
 import com.raphael.carvalho.android.popularmovies.detail.model.ReviewInfo;
 import com.raphael.carvalho.android.popularmovies.detail.model.Trailer;
 import com.raphael.carvalho.android.popularmovies.detail.model.TrailerInfo;
@@ -28,10 +29,15 @@ import com.raphael.carvalho.android.popularmovies.util.MoviesUrl;
 import com.raphael.carvalho.android.popularmovies.util.TaskListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 public class MovieDetailActivity extends AppCompatActivity implements TrailerAdapter.TrailerListener, ReviewsAdapter.ReviewListener {
     private static final String EXTRA_MOVIE = "movie";
+
+    private static final String REVIEW_PAGE_STATE_KEY = "page";
+    private static final String TRAILERS_STATE_KEY = "trailers";
+    private static final String REVIEWS_STATE_KEY = "reviews";
 
     private IFavoriteDAO favoriteDAO;
     private Movie movie;
@@ -39,6 +45,9 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailerAda
 
     private TaskListener<TrailerInfo> trailerListener;
     private TaskListener<ReviewInfo> reviewsListener;
+
+    private TrailerAdapter adapterTrailer;
+    private ReviewsAdapter adapterReviews;
 
     public static void addExtras(Intent intent, Movie movie) {
         intent.putExtra(EXTRA_MOVIE, movie);
@@ -56,13 +65,39 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailerAda
 
             initViews(movie);
 
-            loadTrailers();
-            loadReviews(reviewPage);
+            if (savedInstanceState == null) {
+                loadTrailers();
+                loadReviews(reviewPage);
+
+            } else restoreActivity(savedInstanceState);
 
         } else {
             Toast.makeText(this, R.string.movie_detail_error_open, Toast.LENGTH_LONG).show();
             finish();
         }
+    }
+
+    private void restoreActivity(Bundle savedInstanceState) {
+        reviewPage = savedInstanceState.getInt(REVIEW_PAGE_STATE_KEY, 1);
+
+        ArrayList<Trailer> trailers = savedInstanceState.getParcelableArrayList(TRAILERS_STATE_KEY);
+        if (trailers != null) adapterTrailer.addTrailers(trailers);
+
+        ArrayList<Review> reviews = savedInstanceState.getParcelableArrayList(REVIEWS_STATE_KEY);
+        if (reviews != null) adapterReviews.addReviews(reviews);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(REVIEW_PAGE_STATE_KEY, reviewPage);
+
+        outState.putParcelableArrayList(
+                TRAILERS_STATE_KEY, adapterTrailer.getTrailers());
+
+        outState.putParcelableArrayList(
+                REVIEWS_STATE_KEY, adapterReviews.getReviews());
+
+        super.onSaveInstanceState(outState);
     }
 
     private void initViews(Movie movie) {
@@ -123,7 +158,7 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailerAda
     }
 
     private void initViewTrailers() {
-        TrailerAdapter adapterTrailer = new TrailerAdapter(this);
+        adapterTrailer = new TrailerAdapter(this);
         RecyclerView rvTrailers = findViewById(R.id.rv_movie_detail_trailers);
         rvTrailers.setAdapter(adapterTrailer);
 
@@ -178,7 +213,7 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailerAda
     }
 
     private void initViewReviews() {
-        ReviewsAdapter adapterReviews = new ReviewsAdapter(this);
+        adapterReviews = new ReviewsAdapter(this);
         RecyclerView rvReviews = findViewById(R.id.rv_movie_detail_reviews);
         rvReviews.setAdapter(adapterReviews);
 

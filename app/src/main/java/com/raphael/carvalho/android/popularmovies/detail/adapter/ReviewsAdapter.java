@@ -12,10 +12,9 @@ import com.raphael.carvalho.android.popularmovies.detail.adapter.ReviewsAdapter.
 import com.raphael.carvalho.android.popularmovies.detail.model.Review;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewViewHolder> {
-    private final List<Review> reviews;
+    private final ArrayList<Review> reviews;
     private ReviewListener listener;
 
     public ReviewsAdapter(@NonNull ReviewListener listener) {
@@ -48,6 +47,10 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewViewHolder> {
         this.reviews.addAll(reviews);
 
         notifyItemRangeInserted(size, reviews.size());
+    }
+
+    public ArrayList<Review> getReviews() {
+        return reviews;
     }
 
     public interface ReviewListener {

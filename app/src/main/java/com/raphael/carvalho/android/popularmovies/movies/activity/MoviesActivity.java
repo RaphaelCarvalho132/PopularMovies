@@ -2,6 +2,7 @@ package com.raphael.carvalho.android.popularmovies.movies.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +26,11 @@ import java.util.ArrayList;
 import java.util.Set;
 
 public class MoviesActivity extends AppCompatActivity implements MoviesAdapter.MoviesListener {
+    private static final String SORT_BY_STATE_KEY = "sortBy";
+    private static final String PAGE_STATE_KEY = "page";
+    private static final String SHOW_FAVORITE_STATE_KEY = "showFavorite";
+    private static final String MOVIES_STATE_KEY = "movies";
+
     private IFavoriteDAO favoriteDAO;
 
     private MoviesAdapter adapter;
@@ -34,7 +40,6 @@ public class MoviesActivity extends AppCompatActivity implements MoviesAdapter.M
 
     private String sortBy;
     private int page;
-
     private boolean showFavorite;
 
     @Override
@@ -44,7 +49,32 @@ public class MoviesActivity extends AppCompatActivity implements MoviesAdapter.M
 
         favoriteDAO = new FavoriteDAO();
         initViews();
-        sortBy(MoviesUrl.SORT_BY_POPULARITY);
+        if (savedInstanceState == null) {
+            sortBy(MoviesUrl.SORT_BY_POPULARITY);
+
+        } else {
+            restoreActivity(savedInstanceState);
+        }
+    }
+
+    private void restoreActivity(Bundle savedInstanceState) {
+        sortBy = savedInstanceState.getString(SORT_BY_STATE_KEY);
+        page = savedInstanceState.getInt(PAGE_STATE_KEY, 1);
+        showFavorite = savedInstanceState.getBoolean(SHOW_FAVORITE_STATE_KEY, false);
+
+        ArrayList<Movie> movies = savedInstanceState.getParcelableArrayList(MOVIES_STATE_KEY);
+        if (movies != null) adapter.addMovies(movies);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(SORT_BY_STATE_KEY, sortBy);
+        outState.putInt(PAGE_STATE_KEY, page);
+        outState.putBoolean(SHOW_FAVORITE_STATE_KEY, showFavorite);
+        outState.putParcelableArrayList(
+                MOVIES_STATE_KEY, (ArrayList<? extends Parcelable>) adapter.getMovies());
+
+        super.onSaveInstanceState(outState);
     }
 
     @Override

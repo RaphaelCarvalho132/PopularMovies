@@ -12,10 +12,9 @@ import com.raphael.carvalho.android.popularmovies.detail.adapter.TrailerAdapter.
 import com.raphael.carvalho.android.popularmovies.detail.model.Trailer;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class TrailerAdapter extends RecyclerView.Adapter<TrailerViewHolder> {
-    private final List<Trailer> trailers;
+    private final ArrayList<Trailer> trailers;
     private TrailerListener listener;
 
     public TrailerAdapter(@NonNull TrailerListener listener) {
@@ -48,6 +47,10 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerViewHolder> {
         this.trailers.addAll(trailers);
 
         notifyItemRangeInserted(size, trailers.size());
+    }
+
+    public ArrayList<Trailer> getTrailers() {
+        return trailers;
     }
 
     public interface TrailerListener {
