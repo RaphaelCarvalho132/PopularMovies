@@ -4,14 +4,7 @@
     <string name="message_error_loading_information">You should not be seeing this.\nCheck your connection</string>
     <string name="movies_sort_by_most_popular">Sort by Most Popular</string>
     <string name="movies_sort_by_top_rated">Sort by Top Rated</string>
-    <string name="movies_sort_by_favorite">Sort by Favorite</string>
     <string name="movie_movie_title">Movie Title</string>
     <string name="movie_detail_error_open">You should not be seeing this.\n Error, try again later</string>
     <string name="movie_detail_rating_arg">%1$.1f/10</string>
-    <string name="movie_detail_mark_as_favorite">mark as favorite</string>
-    <string name="movie_detail_favorite">favorite</string>
-    <string name="movie_detail_trailers">Trailers:</string>
-    <string name="movie_detail_reviews">Reviews:</string>
-    <string name="movie_detail_error_sharing">Error sharing. Link not found</string>
-    <string name="movie_detail_error_no_app_share">Not found app to share</string>
 </resources>

@@ -134,10 +134,6 @@ public class Movie implements Parcelable {
         return 0;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
     public Float getVoteAverage() {
         return voteAverage;
     }

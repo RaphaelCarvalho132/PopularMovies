@@ -12,10 +12,4 @@
         android:orderInCategory="1"
         android:title="@string/movies_sort_by_top_rated"
         app:showAsAction="never" />
-
-    <item
-        android:id="@+id/sort_by_favorite"
-        android:orderInCategory="1"
-        android:title="@string/movies_sort_by_favorite"
-        app:showAsAction="never" />
 </menu>

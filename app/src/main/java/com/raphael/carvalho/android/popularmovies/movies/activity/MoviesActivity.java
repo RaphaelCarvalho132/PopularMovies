@@ -2,7 +2,6 @@ package com.raphael.carvalho.android.popularmovies.movies.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -12,69 +11,28 @@ import android.view.View;
 
 import com.raphael.carvalho.android.popularmovies.R;
 import com.raphael.carvalho.android.popularmovies.detail.activity.MovieDetailActivity;
-import com.raphael.carvalho.android.popularmovies.favorite.dao.FavoriteDAO;
-import com.raphael.carvalho.android.popularmovies.favorite.dao.IFavoriteDAO;
 import com.raphael.carvalho.android.popularmovies.movies.adapter.MoviesAdapter;
 import com.raphael.carvalho.android.popularmovies.movies.model.Movie;
 import com.raphael.carvalho.android.popularmovies.movies.model.MovieInfo;
-import com.raphael.carvalho.android.popularmovies.movies.task.MovieDetailTask;
 import com.raphael.carvalho.android.popularmovies.movies.task.SearchMoviesTask;
 import com.raphael.carvalho.android.popularmovies.util.MoviesUrl;
 import com.raphael.carvalho.android.popularmovies.util.TaskListener;
 
-import java.util.ArrayList;
-import java.util.Set;
-
 public class MoviesActivity extends AppCompatActivity implements MoviesAdapter.MoviesListener {
-    private static final String SORT_BY_STATE_KEY = "sortBy";
-    private static final String PAGE_STATE_KEY = "page";
-    private static final String SHOW_FAVORITE_STATE_KEY = "showFavorite";
-    private static final String MOVIES_STATE_KEY = "movies";
-
-    private IFavoriteDAO favoriteDAO;
-
     private MoviesAdapter adapter;
 
     private TaskListener<MovieInfo> movieInfoListener;
-    private TaskListener<ArrayList<Movie>> favoriteMoviesListener;
 
     private String sortBy;
     private int page;
-    private boolean showFavorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies);
 
-        favoriteDAO = new FavoriteDAO();
         initViews();
-        if (savedInstanceState == null) {
-            sortBy(MoviesUrl.SORT_BY_POPULARITY);
-
-        } else {
-            restoreActivity(savedInstanceState);
-        }
-    }
-
-    private void restoreActivity(Bundle savedInstanceState) {
-        sortBy = savedInstanceState.getString(SORT_BY_STATE_KEY);
-        page = savedInstanceState.getInt(PAGE_STATE_KEY, 1);
-        showFavorite = savedInstanceState.getBoolean(SHOW_FAVORITE_STATE_KEY, false);
-
-        ArrayList<Movie> movies = savedInstanceState.getParcelableArrayList(MOVIES_STATE_KEY);
-        if (movies != null) adapter.addMovies(movies);
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putString(SORT_BY_STATE_KEY, sortBy);
-        outState.putInt(PAGE_STATE_KEY, page);
-        outState.putBoolean(SHOW_FAVORITE_STATE_KEY, showFavorite);
-        outState.putParcelableArrayList(
-                MOVIES_STATE_KEY, (ArrayList<? extends Parcelable>) adapter.getMovies());
-
-        super.onSaveInstanceState(outState);
+        sortBy(MoviesUrl.SORT_BY_POPULARITY);
     }
 
     @Override
@@ -95,20 +53,12 @@ public class MoviesActivity extends AppCompatActivity implements MoviesAdapter.M
             sortBy(MoviesUrl.SORT_BY_VOTE_AVERAGE);
             return true;
 
-        } else if (id == R.id.sort_by_favorite) {
-            this.sortBy = null;
-            showFavorite = true;
-            adapter.clearMovies();
-            loadFavoriteMovies();
-
-            return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     private void sortBy(@NonNull String sortBy) {
-        showFavorite = false;
         if (sortBy.equals(this.sortBy)) return;
 
         this.sortBy = sortBy;
@@ -125,10 +75,7 @@ public class MoviesActivity extends AppCompatActivity implements MoviesAdapter.M
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (showFavorite) {
-                            loadFavoriteMovies();
-
-                        } else loadMovies();
+                        loadMovies();
                     }
                 }
         );
@@ -138,7 +85,6 @@ public class MoviesActivity extends AppCompatActivity implements MoviesAdapter.M
         rvMovies.setAdapter(adapter);
 
         movieInfoListener = initMovieInfoListener(adapter, rvMovies, pbLoading, cgErrorLoading);
-        favoriteMoviesListener = initFavoriteMoviesListener(adapter, rvMovies, pbLoading, cgErrorLoading);
     }
 
     private TaskListener<MovieInfo> initMovieInfoListener(
@@ -175,39 +121,6 @@ public class MoviesActivity extends AppCompatActivity implements MoviesAdapter.M
         };
     }
 
-    private TaskListener<ArrayList<Movie>> initFavoriteMoviesListener(
-            final MoviesAdapter adapter, final RecyclerView recyclerView,
-            final View pbLoading, final View vErrorLoading) {
-        return new TaskListener<ArrayList<Movie>>() {
-
-            @Override
-            public void showLoading() {
-                vErrorLoading.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.GONE);
-
-                pbLoading.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void showErrorMessage() {
-                pbLoading.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.GONE);
-
-                vErrorLoading.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public synchronized void showResult(ArrayList<Movie> result) {
-                pbLoading.setVisibility(View.GONE);
-                vErrorLoading.setVisibility(View.GONE);
-
-                recyclerView.setVisibility(View.VISIBLE);
-
-                adapter.addMovies(result);
-            }
-        };
-    }
-
     @Override
     public void onClickMovie(Movie movie) {
         Intent intent = new Intent(this, MovieDetailActivity.class);
@@ -218,16 +131,8 @@ public class MoviesActivity extends AppCompatActivity implements MoviesAdapter.M
 
     @Override
     public void onLoadLastItem() {
-        if (!showFavorite) {
-            ++page;
-            loadMovies();
-        }
-    }
-
-    private void loadFavoriteMovies() {
-        Set<String> allMovieFavorite = favoriteDAO.loadAllMovieFavorite(this);
-        new MovieDetailTask(favoriteMoviesListener)
-                .execute(allMovieFavorite.toArray(new String[0]));
+        ++page;
+        loadMovies();
     }
 
     private void loadMovies() {
