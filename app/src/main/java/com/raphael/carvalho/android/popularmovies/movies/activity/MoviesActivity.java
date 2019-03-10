@@ -32,7 +32,7 @@ public class MoviesActivity extends AppCompatActivity implements MoviesAdapter.M
         setContentView(R.layout.activity_movies);
 
         initViews();
-        sortBy(MoviesUrl.SORT_BY_POPULARITY);
+        sortBy(MoviesUrl.SORT_BY_POPULAR);
     }
 
     @Override
@@ -46,11 +46,11 @@ public class MoviesActivity extends AppCompatActivity implements MoviesAdapter.M
         int id = item.getItemId();
 
         if (id == R.id.sort_by_most_popular) {
-            sortBy(MoviesUrl.SORT_BY_POPULARITY);
+            sortBy(MoviesUrl.SORT_BY_POPULAR);
             return true;
 
         } else if (id == R.id.sort_by_top_rated) {
-            sortBy(MoviesUrl.SORT_BY_VOTE_AVERAGE);
+            sortBy(MoviesUrl.SORT_BY_TOP_RATED);
             return true;
 
         }

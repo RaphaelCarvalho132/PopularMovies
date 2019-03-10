@@ -14,17 +14,18 @@ import java.util.regex.Pattern;
 import static com.raphael.carvalho.android.popularmovies.BuildConfig.API_KEY_THE_MOVIE_DB;
 
 public class MoviesUrl {
-    public static final String SORT_BY_POPULARITY = "popularity.desc";
-    public static final String SORT_BY_VOTE_AVERAGE = "vote_average.desc";
+    public static final String SORT_BY_POPULAR = "popular";
+    public static final String SORT_BY_TOP_RATED = "top_rated";
 
     private static final String TAG = MoviesUrl.class.getSimpleName();
 
     private static final String BASE_URL = "https://api.themoviedb.org/3/";
 
-    private static final String DISCOVER_PATH_URL = "discover/movie";
+    private static final String MOVIE_PATH_URL = "movie";
+    private static final String POPULAR_PATH_URL = "popular";
+    private static final String TOP_RATED_PATH_URL = "top_rated";
 
     private static final String API_KEY_PARAM = "api_key";
-    private static final String SORT_BY_PARAM = "sort_by";
     private static final String PAGE_PARAM = "page";
     private static final String LANGUAGE_PARAM = "language";
 
@@ -39,13 +40,25 @@ public class MoviesUrl {
     }
 
     public static URL buildDiscoverUrl(@SortBy String sortBy, String page) {
-        return buildUrl(
-                getConfiguredBuilder()
-                        .appendEncodedPath(DISCOVER_PATH_URL)
-                        .appendQueryParameter(SORT_BY_PARAM, sortBy)
-                        .appendQueryParameter(PAGE_PARAM, page)
-                        .build()
-        );
+        if (SORT_BY_POPULAR.equals(sortBy)) {
+            return buildUrl(
+                    getConfiguredBuilder()
+                            .appendEncodedPath(MOVIE_PATH_URL)
+                            .appendEncodedPath(POPULAR_PATH_URL)
+                            .appendQueryParameter(PAGE_PARAM, page)
+                            .build()
+            );
+
+        } else if (SORT_BY_TOP_RATED.equals(sortBy)) {
+            return buildUrl(
+                    getConfiguredBuilder()
+                            .appendEncodedPath(MOVIE_PATH_URL)
+                            .appendEncodedPath(TOP_RATED_PATH_URL)
+                            .appendQueryParameter(PAGE_PARAM, page)
+                            .build()
+            );
+
+        } else return null;
     }
 
     private static URL buildUrl(Uri uri) {
@@ -76,7 +89,7 @@ public class MoviesUrl {
         return Locale.getDefault().getDisplayLanguage();
     }
 
-    @StringDef({SORT_BY_POPULARITY, SORT_BY_VOTE_AVERAGE})
+    @StringDef({SORT_BY_POPULAR, SORT_BY_TOP_RATED})
     @Retention(RetentionPolicy.SOURCE)
     private @interface SortBy {
     }
